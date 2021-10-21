@@ -1,0 +1,49 @@
+<section class="drawer" id="drawer-name" data-drawer-target>
+  <div class="drawer__overlay" data-drawer-close tabindex="-1"></div>
+  <div class="drawer__wrapper">
+    <div class="drawer__header">
+      <div class="drawer__title">
+        
+      </div>
+      <button class="drawer__close" data-drawer-close aria-label="Close Drawer"></button>
+    </div>
+    <h2 class="drawer_title">Cart</h2>
+    <div class="drawer__content">
+      <div id="drawer_cart_items">  
+
+	</div>
+      <div class="drawer_notes">
+        <h4>ORDER NOTE</h4>
+        <textarea style="width: 100%;">e.g. Thank you</textarea>
+      
+      </div>
+<div id="drawer_cart_bottom">
+<h4>SUBTOTAL: <span id="drawer_total_amount"></span></h4>
+  <h5>Shipping taxes and discount codes calculated at checkout.</h5>
+<a href="/checkout" class="btn cart__continue-btn" id="drawer_checkout_btn" style="width: 100%; background: #273E22;">Checkout</a>
+</div>
+    </div>
+  </div>
+</section>
+
+<script>
+fetch('/cart.js')
+.then((resp) => resp.json())
+.then((data) => {
+  
+  if(data.items.length > 0 ) {
+    data.items.forEach(function(product, index) {
+ document.getElementById('drawer_cart_items').innerHTML = '<div class="cart_img"><img src="'+ product.featured_image.url +'" alt="'+ product.featured_image.alt +'"></div><div class="cart_title"><h4>'+ product.title +'</h4><br/><input type="text" value="'+ product.quantity +'"><br></div><div class="cart_price"><h4>'+ theme.Currency.formatMoney(product.line_price, theme.moneyformat) +'</h4></div>';
+	}); 
+     
+} else {
+        
+      document.getElementById('drawer_cart_items').innerHTML = '<p>Cart is empty</p>';
+      document.getElementById('drawer_checkout_btn').setAttribute('disabled', 'disabled');
+	  document.getElementById('drawer_checkout_btn').style.pointerEvents = 'none';	
+}
+  
+  document.getElementById('drawer_total_amount').innerHTML = theme.Currency.formatMoney(data.total_price, theme.moneyformat);
+  
+});
+</script>
